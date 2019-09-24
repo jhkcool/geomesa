@@ -18,6 +18,7 @@ import org.locationtech.geomesa.curve.TimePeriod.TimePeriod
 import org.locationtech.geomesa.curve.{TimePeriod, XZSFC}
 import org.locationtech.geomesa.utils.conf.{IndexId, SemanticVersion}
 import org.locationtech.geomesa.utils.geometry.GeometryPrecision
+import org.locationtech.geomesa.utils.geotools.SimpleFeatureTypes.Configs.S3_INTERVAL_KEY
 import org.locationtech.geomesa.utils.index.VisibilityLevel
 import org.locationtech.geomesa.utils.index.VisibilityLevel.VisibilityLevel
 import org.locationtech.geomesa.utils.stats.{Cardinality, IndexCoverage}
