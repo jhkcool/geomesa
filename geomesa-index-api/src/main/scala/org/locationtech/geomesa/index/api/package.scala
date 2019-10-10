@@ -324,6 +324,7 @@ package object api {
   // specialize long to avoid boxing for z2/xz2 index
   case class BoundedRange[@specialized(Long) T](lower: T, upper: T) extends ScanRange[T]
   case class SingleRowRange[T](row: T) extends ScanRange[T]
+  case class S3BoundedRange[T](lower: T, upper: T) extends ScanRange[T]
   case class PrefixRange[T](prefix: T) extends ScanRange[T]
   case class LowerBoundedRange[T](lower: T) extends ScanRange[T]
   case class UpperBoundedRange[T](upper: T) extends ScanRange[T]
