@@ -9,7 +9,6 @@
 package org.locationtech.geomesa.curve
 
 import com.google.common.geometry._
-import org.locationtech.geomesa.conf.CommonProperties
 
 import scala.collection.JavaConversions._
 
@@ -19,7 +18,7 @@ import scala.collection.JavaConversions._
   * @author sunyabo 2019年07月26日 09:11
   * @version V1.0
   */
-class S2SFC extends S2SpaceFillingCurve[S2CellId] {
+class S2SFC(minLevel: Int, maxLevel: Int, levelMod: Int, maxCells: Int) extends S2SpaceFillingCurve[S2CellId] {
 
   private val lonMin: Double = -180d
   private val latMin: Double = -90d
@@ -53,10 +52,10 @@ class S2SFC extends S2SpaceFillingCurve[S2CellId] {
       S2LatLng.fromDegrees(xy.head._4, xy.head._3))
 
     val cover: S2RegionCoverer = new S2RegionCoverer
-    cover.setMinLevel(CommonProperties.S2MinLevel)
-    cover.setMaxLevel(CommonProperties.S2MaxLevel)
-    cover.setLevelMod(CommonProperties.S2LevelMod)
-    cover.setMaxCells(CommonProperties.S2MaxCells)
+    cover.setMinLevel(minLevel)
+    cover.setMaxLevel(maxLevel)
+    cover.setLevelMod(levelMod)
+    cover.setMaxCells(maxCells)
 
     val s2CellUnion = cover.getCovering(rect)
 
@@ -65,5 +64,7 @@ class S2SFC extends S2SpaceFillingCurve[S2CellId] {
 }
 
 object S2SFC {
-  val s2SFC = new S2SFC
+  def apply(minLevel: Int, maxLevel: Int, levelMod: Int, maxCells: Int): S2SFC =
+    new S2SFC(minLevel, maxLevel, levelMod, maxCells)
 }
+
