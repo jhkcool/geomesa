@@ -39,7 +39,8 @@ class S2IndexKeySpace(val sft: SimpleFeatureType, val sharding: ShardStrategy, g
     s"Expected field $geomField to have a point binding, but instead it has: " +
       sft.getDescriptor(geomField).getType.getBinding.getSimpleName)
 
-  protected val sfc: S2SFC = new S2SFC
+  protected val sfc: S2SFC = new S2SFC(QueryProperties.S2MinLevel, QueryProperties.S2MaxLevel,
+    QueryProperties.S2LevelMod, QueryProperties.S2MaxCells)
 
   protected val geomIndex: Int = sft.indexOf(geomField)
 
