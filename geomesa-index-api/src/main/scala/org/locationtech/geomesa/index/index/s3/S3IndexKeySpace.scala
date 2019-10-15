@@ -50,7 +50,8 @@ class S3IndexKeySpace(val sft: SimpleFeatureType,
     s"Expected field $dtgField to have a date binding, but instead it has: " +
       sft.getDescriptor(dtgField).getType.getBinding.getSimpleName)
 
-  protected val sfc = S3SFC(sft.getS3Interval)
+  protected val sfc = S3SFC(QueryProperties.S2MinLevel, QueryProperties.S2MaxLevel,
+    QueryProperties.S2LevelMod, QueryProperties.S2MaxCells, sft.getS3Interval)
 
   protected val geomIndex: Int = sft.indexOf(geomField)
   protected val dtgIndex: Int = sft.indexOf(dtgField)
