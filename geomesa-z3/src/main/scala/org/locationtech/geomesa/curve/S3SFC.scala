@@ -26,9 +26,23 @@ class S3SFC(period: TimePeriod) extends S3SpaceFillingCurve[S2CellId] {
   protected val latMax: Double = 90d
 
   var minLevel: Int = 0
-  var maxLevel: Int = 30
-  var levelMod: Int = 1
-  var maxCells: Int = 8
+package org.locationtech.geomesa.curve
+
+import com.google.common.geometry._
+import org.locationtech.geomesa.curve.TimePeriod.TimePeriod
+
+import scala.collection.JavaConversions._
+
+/**
+  * @author sunyabo 2019年08月01日 10:21
+  * @version V1.0
+  */
+class S3SFC(minLevel: Int, maxLevel: Int, levelMod: Int, maxCells: Int, period: TimePeriod) extends S3SpaceFillingCurve[S2CellId] {
+
+  protected val lonMin: Double = -180d
+  protected val latMin: Double = -90d
+  protected val lonMax: Double = 180d
+  protected val latMax: Double = 90d
 
   override def time: Int = BinnedTime.maxOffset(period).toInt
 
@@ -62,29 +76,25 @@ class S3SFC(period: TimePeriod) extends S3SpaceFillingCurve[S2CellId] {
     val endS2 = S2LatLng.fromDegrees(xy.head._4, xy.head._3)
     val rect = new S2LatLngRect(startS2, endS2)
 
-    val coverer = new S2RegionCoverer
-    coverer.setMinLevel(CommonProperties.S2MinLevel)
-    coverer.setMaxLevel(CommonProperties.S2MaxLevel)
-    coverer.setLevelMod(CommonProperties.S2LevelMod)
-    coverer.setMaxCells(CommonProperties.S2MaxCells)
+    val cover = new S2RegionCoverer
+    cover.setMinLevel(minLevel)
+    cover.setMaxLevel(maxLevel)
+    cover.setLevelMod(levelMod)
+    cover.setMaxCells(maxCells)
 
-    val cellUnion = coverer.getCovering(rect)
+    val cellUnion = cover.getCovering(rect)
 
-    JavaConverters.asScalaIteratorConverter(cellUnion.cellIds().iterator).asScala.toSeq
+    cellUnion.cellIds().toSeq
   }
 }
 
 object S3SFC {
 
-  private val SfcDay   = new S3SFC(TimePeriod.Day)
-  private val SfcWeek  = new S3SFC(TimePeriod.Week)
-  private val SfcMonth = new S3SFC(TimePeriod.Month)
-  private val SfcYear  = new S3SFC(TimePeriod.Year)
-
-  def apply(period: TimePeriod): S3SFC = period match {
-    case TimePeriod.Day   => SfcDay
-    case TimePeriod.Week  => SfcWeek
-    case TimePeriod.Month => SfcMonth
-    case TimePeriod.Year  => SfcYear
+  def apply(minLevel: Int, maxLevel: Int, levelMod: Int, maxCells: Int, period: TimePeriod): S3SFC = period match {
+    case TimePeriod.Day   => new S3SFC(minLevel, maxLevel, levelMod, maxCells, TimePeriod.Day)
+    case TimePeriod.Week  => new S3SFC(minLevel, maxLevel, levelMod, maxCells, TimePeriod.Week)
+    case TimePeriod.Month => new S3SFC(minLevel, maxLevel, levelMod, maxCells, TimePeriod.Month)
+    case TimePeriod.Year  => new S3SFC(minLevel, maxLevel, levelMod, maxCells, TimePeriod.Year)
   }
 }
+
