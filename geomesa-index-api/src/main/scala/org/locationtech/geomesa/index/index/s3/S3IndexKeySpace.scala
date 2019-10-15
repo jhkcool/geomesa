@@ -221,7 +221,7 @@ class S3IndexKeySpace(val sft: SimpleFeatureType,
     val bounded = timesByBin.iterator.flatMap { case (bin, times) => {
       val s3ScanRanges = ListBuffer.empty[ScanRange[S3IndexKey]]
       times.foreach(time => s2CellId.foreach(item=> s3ScanRanges
-        .add(S3BoundedRange(S3IndexKey(bin, item.rangeMin().id(), time._1),
+        .add(BoundedRange(S3IndexKey(bin, item.rangeMin().id(), time._1),
         S3IndexKey(bin, item.rangeMax().id(), time._2)))))
       s3ScanRanges
       }
@@ -250,7 +250,7 @@ class S3IndexKeySpace(val sft: SimpleFeatureType,
 
     if (sharding.length == 0) {
       ranges.map {
-        case S3BoundedRange(lo, hi) =>
+        case BoundedRange(lo, hi) =>
           BoundedByteRange(ByteArrays.toS3Bytes(lo.bin, lo.s, lo.offset),
             ByteArrays.toS3Bytes(hi.bin, hi.s, hi.offset))
 
@@ -268,7 +268,7 @@ class S3IndexKeySpace(val sft: SimpleFeatureType,
       }
     } else {
       ranges.flatMap {
-        case S3BoundedRange(lo, hi) =>
+        case BoundedRange(lo, hi) =>
           val lower = ByteArrays.toS3Bytes(lo.bin, lo.s, lo.offset)
           val upper = ByteArrays.toS3Bytes(hi.bin, hi.s, hi.offset)
           sharding.shards.map(p => BoundedByteRange(ByteArrays.concat(p, lower), ByteArrays.concat(p, upper)))
