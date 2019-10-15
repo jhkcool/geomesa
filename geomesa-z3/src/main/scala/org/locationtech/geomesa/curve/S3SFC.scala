@@ -5,27 +5,6 @@
  * which accompanies this distribution and is available at
  * http://www.opensource.org/licenses/apache2.0.php.
  ***********************************************************************/
-
-package org.locationtech.geomesa.curve
-
-import com.google.common.geometry._
-import org.locationtech.geomesa.conf.CommonProperties
-import org.locationtech.geomesa.curve.TimePeriod.TimePeriod
-
-import scala.collection.JavaConverters
-
-/**
-  * @author sunyabo 2019年08月01日 10:21
-  * @version V1.0
-  */
-class S3SFC(period: TimePeriod) extends S3SpaceFillingCurve[S2CellId] {
-
-  protected val lonMin: Double = -180d
-  protected val latMin: Double = -90d
-  protected val lonMax: Double = 180d
-  protected val latMax: Double = 90d
-
-  var minLevel: Int = 0
 package org.locationtech.geomesa.curve
 
 import com.google.common.geometry._
